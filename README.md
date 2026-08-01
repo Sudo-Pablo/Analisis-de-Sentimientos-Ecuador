@@ -1,4 +1,4 @@
-# Sentiment Analyzer vU
+# Sistema de analisis de sentimientos Ecuador v0.1
 
 Plataforma web para explorar la opinión ciudadana en Ecuador a partir de publicaciones y comentarios de **Facebook** y **TikTok**, con análisis de sentimientos en español.
 
