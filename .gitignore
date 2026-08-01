@@ -1,0 +1,108 @@
+# Entornos virtuales
+venv/
+env/
+ENV/
+.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Jupyter
+.ipynb_checkpoints
+
+# Variables de entorno (nunca versionar secretos)
+.env
+.env.local
+frontend/.env
+frontend/.env.local
+
+# Logs
+logs/
+*.log
+
+# Bases de datos locales
+*.db
+*.sqlite3
+
+# Datos generados en runtime
+data/raw/*
+data/processed/*
+data/reports/*
+data/scraped/
+data/cookies/
+data/evaluation/
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/reports/.gitkeep
+
+# Sesiones / cookies / scrapers locales
+.playwright/
+playwright-state.json
+config/facebook_session.json
+config/scrapers/facebook_session.json
+*.session.json
+*.pkl
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+
+# Documentos locales / borradores
+*.docx
+*.pdf
+Observaciones.*
+final*.docx
+DAtos/
+
+# IDE / SO
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+.cursor/
+temp/
+
+# Secretos
+.env
+frontend/.env
+config/scrapers/facebook_session.json
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+# Node
+frontend/node_modules/
+# Datos / logs locales
+logs/
+data/
+*.sqlite
+*.db
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
