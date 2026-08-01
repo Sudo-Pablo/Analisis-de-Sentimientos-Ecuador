@@ -1,0 +1,27 @@
+{
+  "database": {
+    "type": "postgresql",
+    "connection": {
+      "host": "${DB_HOST}",
+      "port": "${DB_PORT}",
+      "database": "${DB_NAME}",
+      "user": "${DB_USER}",
+      "password": "${DB_PASSWORD}"
+    },
+    "pool": {
+      "min_size": 2,
+      "max_size": 10
+    },
+    "options": {
+      "echo": false,
+      "pool_pre_ping": true
+    }
+  },
+  "tables": {
+    "posts": "fb_posts",
+    "comments": "fb_comments",
+    "sentiments": "comment_sentiments",
+    "weekly_reports": "weekly_reports",
+    "topics": "topics"
+  }
+}

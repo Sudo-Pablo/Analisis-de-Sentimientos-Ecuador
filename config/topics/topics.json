@@ -1,0 +1,86 @@
+{
+  "topics": [
+    {
+      "id": 1,
+      "name": "Salud",
+      "keywords": [
+        "salud",
+        "médico",
+        "hospital",
+        "vacuna",
+        "enfermedad",
+        "medicina",
+        "covid",
+        "pandemia",
+        "iess",
+        "msp"
+      ],
+      "active": true
+    },
+    {
+      "id": 2,
+      "name": "Economía",
+      "keywords": [
+        "economía",
+        "dólar",
+        "empleo",
+        "inflación",
+        "impuestos",
+        "sri",
+        "trabajo",
+        "desempleo",
+        "salario",
+        "precio"
+      ],
+      "active": true
+    },
+    {
+      "id": 3,
+      "name": "Política",
+      "keywords": [
+        "política",
+        "gobierno",
+        "asamblea",
+        "presidente",
+        "ministro",
+        "ley",
+        "elecciones",
+        "votación",
+        "congreso",
+        "estado"
+      ],
+      "active": true
+    },
+    {
+      "id": 4,
+      "name": "Daniel Noboa",
+      "keywords": [
+        "noboa",
+        "daniel noboa",
+        "presidente noboa",
+        "mandatario",
+        "primer mandatario"
+      ],
+      "active": true
+    },
+    {
+      "id": 5,
+      "name": "Seguridad",
+      "keywords": [
+        "seguridad",
+        "delincuencia",
+        "policía",
+        "crimen",
+        "robo",
+        "violencia",
+        "narcotráfico",
+        "bandas",
+        "estado de excepción",
+        "cuenca",
+        "gualaceo",
+        "fuerzas armadas"
+      ],
+      "active": true
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "tiktok": {
+    "enabled": true,
+    "apify_token": "${APIFY_TOKEN}",
+    "default_limits": {
+      "max_videos_per_keyword": 5,
+      "max_comments_per_video": 10,
+      "batch_size": 16
+    },
+    "categories": {
+      "Politica": [
+        "política ecuador",
+        "gobierno ecuador", 
+        "presidente ecuador",
+        "asamblea nacional ecuador",
+        "elecciones ecuador",
+        "políticos ecuador",
+        "correa ecuador",
+        "lasso ecuador",
+        "noboa ecuador"
+      ],
+      "Economia": [
+        "economía ecuador",
+        "dólar ecuador",
+        "inflación ecuador", 
+        "empleo ecuador",
+        "economía ecuatoriana",
+        "banco central ecuador",
+        "precio gasolina ecuador",
+        "canasta básica ecuador"
+      ],
+      "Salud": [
+        "salud ecuador",
+        "hospitales ecuador",
+        "medicina ecuador",
+        "salud pública ecuador", 
+        "ministerio de salud ecuador",
+        "msp ecuador",
+        "covid ecuador",
+        "vacunas ecuador"
+      ],
+      "Seguridad": [
+        "seguridad ecuador",
+        "delincuencia ecuador",
+        "policía ecuador",
+        "violencia ecuador", 
+        "crimen ecuador",
+        "inseguridad ecuador",
+        "narcotráfico ecuador",
+        "estado de excepción ecuador"
+      ],
+      "Educacion": [
+        "educación ecuador",
+        "universidades ecuador",
+        "estudiantes ecuador",
+        "colegios ecuador",
+        "ministerio educación ecuador",
+        "senescyt ecuador",
+        "ser bachiller ecuador"
+      ],
+      "Social": [
+        "sociedad ecuador",
+        "cultura ecuador", 
+        "tradiciones ecuador",
+        "familias ecuador",
+        "juventud ecuador",
+        "comunidad ecuador",
+        "pueblos indígenas ecuador",
+        "migración ecuador"
+      ]
+    },
+    "scraper_settings": {
+      "delay_between_requests": 2,
+      "retry_attempts": 3,
+      "timeout": 30
+    }
+  },
+  "facebook": {
+    "enabled": true,
+    "existing_config": "Se mantiene la configuración actual de Facebook"
+  },
+  "sentiment_analysis": {
+    "huggingface": {
+      "primary_model": "pysentimiento/robertuito-sentiment-analysis",
+      "fallback_model": "finiteautomata/beto-sentiment-analysis",
+      "batch_size": 16,
+      "device": "auto"
+    }
+  },
+  "database": {
+    "platform_field_required": true,
+    "category_field_required": false,
+    "enable_indexing": true
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "facebook_pages": [
+    {
+      "id": 1,
+      "name": "Radio Tomebamba",
+      "page_id": "rtomebamba",
+      "url": "https://www.facebook.com/rtomebamba",
+      "category": "news",
+      "active": true
+    },
+    {
+      "id": 2,
+      "name": "El Comercio Ecuador",
+      "page_id": "elcomerciocom",
+      "url": "https://www.facebook.com/elcomerciocom",
+      "category": "news",
+      "active": true
+    },
+    {
+      "id": 3,
+      "name": "Ecuavisa",
+      "page_id": "ecuavisa",
+      "url": "https://www.facebook.com/ecuavisa",
+      "category": "news",
+      "active": true
+    },
+    {
+      "id": 4,
+      "name": "Teleamazonas Ecuador",
+      "page_id": "teleamazonasecuador",
+      "url": "https://www.facebook.com/teleamazonasecuador",
+      "category": "news",
+      "active": true
+    }
+  ]
+}
