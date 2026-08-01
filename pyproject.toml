@@ -1,0 +1,64 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sentiment-analyzer"
+version = "1.0.0"
+description = "Sistema de análisis de sentimientos multiplataforma (Facebook + TikTok) para el contexto ecuatoriano"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {name = "Equipo de Desarrollo"}
+]
+keywords = ["sentiment-analysis", "facebook", "tiktok", "nlp", "social-media", "ecuador"]
+
+dependencies = [
+    "pandas>=2.1.4",
+    "numpy>=1.26.2",
+    "facebook-scraper>=0.2.59",
+    "requests>=2.31.0",
+    "beautifulsoup4>=4.12.2",
+    "apify-client>=1.7.0",
+    "transformers>=4.36.2",
+    "torch>=2.2.0",
+    "nltk>=3.8.1",
+    "textblob>=0.17.1",
+    "langdetect>=1.0.9",
+    "sqlalchemy>=2.0.23",
+    "psycopg2-binary>=2.9.9",
+    "fastapi>=0.109.0",
+    "uvicorn[standard]>=0.27.0",
+    "pydantic>=2.5.0",
+    "python-multipart>=0.0.6",
+    "python-dotenv>=1.0.0",
+    "python-dateutil>=2.8.2",
+    "pytz>=2023.3",
+    "tqdm>=4.66.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.3",
+    "pytest-cov>=4.1.0",
+]
+
+[project.scripts]
+sentiment-collect = "scripts.scrapers.run_multiplatform_collector:main"
+sentiment-api = "scripts.run_api:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = [
+    "src",
+    "src.*",
+    "api",
+    "api.*",
+    "scripts",
+    "scripts.*"
+]
+exclude = ["tests*", "docs*", "frontend*", "venv*", ".venv*"]
+
+[tool.setuptools.package-data]
+"*" = ["*.json", "*.txt"]
