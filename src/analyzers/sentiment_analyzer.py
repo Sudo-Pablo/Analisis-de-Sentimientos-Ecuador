@@ -7,11 +7,21 @@ import pandas as pd
 import numpy as np
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import torch
-from textblob import TextBlob
-import nltk
-from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
 logger = logging.getLogger(__name__)
+
+
+def _import_textblob():
+    """Import diferido: evita fallos de nltk/defusedxml al arrancar la API."""
+    from textblob import TextBlob
+    return TextBlob
+
+
+def _import_vader():
+    """Import diferido de VADER/NLTK solo si se usa ese modelo."""
+    import nltk
+    from nltk.sentiment.vader import SentimentIntensityAnalyzer
+    return nltk, SentimentIntensityAnalyzer
 
 
 class SentimentAnalyzer:
@@ -64,6 +74,7 @@ class SentimentAnalyzer:
     def _init_vader(self):
         """Inicializa VADER para análisis de sentimientos"""
         try:
+            nltk, SentimentIntensityAnalyzer = _import_vader()
             nltk.download('vader_lexicon', quiet=True)
             self.vader = SentimentIntensityAnalyzer()
             logger.info("VADER inicializado")
@@ -165,6 +176,7 @@ class SentimentAnalyzer:
             Diccionario con sentimiento y confianza
         """
         try:
+            TextBlob = _import_textblob()
             blob = TextBlob(text)
             polarity = blob.sentiment.polarity
             
