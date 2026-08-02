@@ -1,20 +1,25 @@
 """
 Servicio compartido de análisis de sentimientos para la API.
-Singleton + warmup al arranque para evitar recargar el modelo en cada búsqueda.
+Singleton + warmup opcional (no cargar torch/BETO al importar el módulo).
 """
-import logging
-from typing import Optional
+from __future__ import annotations
 
-from src.analyzers.sentiment_analyzer import SentimentAnalyzer
+import logging
+from typing import TYPE_CHECKING, Optional
+
+if TYPE_CHECKING:
+    from src.analyzers.sentiment_analyzer import SentimentAnalyzer
 
 logger = logging.getLogger(__name__)
 
-_ANALYZER: Optional[SentimentAnalyzer] = None
+_ANALYZER: Optional["SentimentAnalyzer"] = None
 
 
-def get_sentiment_analyzer() -> SentimentAnalyzer:
+def get_sentiment_analyzer() -> "SentimentAnalyzer":
     global _ANALYZER
     if _ANALYZER is None:
+        from src.analyzers.sentiment_analyzer import SentimentAnalyzer
+
         logger.info("Inicializando SentimentAnalyzer (singleton API)...")
         _ANALYZER = SentimentAnalyzer()
     return _ANALYZER

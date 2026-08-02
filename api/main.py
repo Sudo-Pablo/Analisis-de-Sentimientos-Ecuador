@@ -34,8 +34,13 @@ logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    logger.info("Arranque API: precalentando modelo de sentimientos...")
-    warmup_sentiment_analyzer()
+    # En Render Starter (512MB) cargar BETO/torch al arranque provoca OOM (exit 137).
+    # Activa con WARMUP_SENTIMENT=true solo si hay RAM suficiente (p. ej. Standard 2GB).
+    if os.getenv("WARMUP_SENTIMENT", "").strip().lower() in {"1", "true", "yes"}:
+        logger.info("Arranque API: precalentando modelo de sentimientos...")
+        warmup_sentiment_analyzer()
+    else:
+        logger.info("Arranque API: warmup omitido (WARMUP_SENTIMENT no activo)")
     yield
     logger.info("API detenida")
 

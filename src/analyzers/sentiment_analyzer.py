@@ -5,10 +5,18 @@ import logging
 from typing import Dict, List, Tuple
 import pandas as pd
 import numpy as np
-from transformers import AutoTokenizer, AutoModelForSequenceClassification
-import torch
 
 logger = logging.getLogger(__name__)
+
+
+def _import_torch():
+    import torch
+    return torch
+
+
+def _import_transformers():
+    from transformers import AutoTokenizer, AutoModelForSequenceClassification
+    return AutoTokenizer, AutoModelForSequenceClassification
 
 
 def _import_textblob():
@@ -37,7 +45,7 @@ class SentimentAnalyzer:
             model_name: Modelo a usar ('beto', 'vader', 'textblob')
         """
         self.model_name = model_name
-        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        self.device = None
         
         # Inicializar modelo según configuración
         if model_name == 'beto':
@@ -52,13 +60,20 @@ class SentimentAnalyzer:
     def _init_beto_model(self):
         """Inicializa el modelo BETO para español"""
         try:
+            torch = _import_torch()
+            AutoTokenizer, AutoModelForSequenceClassification = _import_transformers()
+            self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
             # Modelo BETO fine-tuned para análisis de sentimientos
             #model_path = "finiteautomata/beto-sentiment-analysis"
             model_path = "pysentimiento/robertuito-sentiment-analysis"
             
             logger.info(f"Cargando modelo BETO desde {model_path}")
             self.tokenizer = AutoTokenizer.from_pretrained(model_path)
-            self.model = AutoModelForSequenceClassification.from_pretrained(model_path)
+            self.model = AutoModelForSequenceClassification.from_pretrained(
+                model_path,
+                low_cpu_mem_usage=True,
+            )
             self.model.to(self.device)
             self.model.eval()
             
@@ -93,6 +108,7 @@ class SentimentAnalyzer:
             Diccionario con sentimiento y confianza
         """
         try:
+            torch = _import_torch()
             # Tokenizar
             inputs = self.tokenizer(
                 text,
@@ -241,6 +257,7 @@ class SentimentAnalyzer:
             return results
 
         try:
+            torch = _import_torch()
             inputs = self.tokenizer(
                 valid_texts,
                 return_tensors="pt",

@@ -32,6 +32,10 @@ services:
         value: ./data
       - key: DB_SSLMODE
         value: require
+      # false en Starter 512MB: evita OOM (exit 137) al cargar BETO al arranque
+      - key: WARMUP_SENTIMENT
+        value: "false"
+
       - key: DB_HOST
         fromDatabase:
           name: sentiment-db
