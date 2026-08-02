@@ -4,8 +4,71 @@ Helper para inicializar DatabaseManager con configuración
 import json
 import os
 from pathlib import Path
-from typing import Dict
+from typing import Dict, Optional
+from urllib.parse import unquote, urlparse
 from dotenv import load_dotenv
+
+
+def _parse_database_url(url: str) -> Optional[Dict[str, str]]:
+    """
+    Parsea postgresql://user:pass@host:port/dbname (Internal/External de Render).
+    """
+    raw = (url or "").strip()
+    if not raw:
+        return None
+    if "://" not in raw:
+        return None
+
+    parsed = urlparse(raw)
+    if parsed.scheme not in {"postgres", "postgresql", "postgresql+psycopg2"}:
+        return None
+    if not parsed.hostname:
+        return None
+
+    db_name = (parsed.path or "").lstrip("/")
+    if not db_name:
+        return None
+
+    return {
+        "host": parsed.hostname,
+        "port": str(parsed.port or 5432),
+        "database": unquote(db_name),
+        "user": unquote(parsed.username or ""),
+        "password": unquote(parsed.password or ""),
+    }
+
+
+def resolve_db_env() -> Dict[str, str]:
+    """
+    Resuelve credenciales desde:
+    1) DATABASE_URL / INTERNAL_DATABASE_URL (URL completa)
+    2) DB_HOST si accidentalmente contiene una URL completa
+    3) DB_HOST / DB_PORT / DB_NAME / DB_USER / DB_PASSWORD por separado
+    """
+    for key in ("DATABASE_URL", "INTERNAL_DATABASE_URL", "RENDER_DATABASE_URL"):
+        parsed = _parse_database_url(os.getenv(key, ""))
+        if parsed:
+            return parsed
+
+    host_raw = os.getenv("DB_HOST", "localhost").strip()
+    parsed_host = _parse_database_url(host_raw)
+    if parsed_host:
+        # Si DB_HOST trae URL completa, preferir sus partes; permitir overrides parciales
+        return {
+            "host": parsed_host["host"],
+            "port": os.getenv("DB_PORT") or parsed_host["port"],
+            "database": os.getenv("DB_NAME") or parsed_host["database"],
+            "user": os.getenv("DB_USER") or parsed_host["user"],
+            "password": os.getenv("DB_PASSWORD") or parsed_host["password"],
+        }
+
+    return {
+        "host": host_raw or "localhost",
+        "port": os.getenv("DB_PORT", "5432"),
+        "database": os.getenv("DB_NAME", "sentiment_analysis"),
+        "user": os.getenv("DB_USER", "postgres"),
+        "password": os.getenv("DB_PASSWORD", ""),
+    }
 
 
 def load_database_config() -> Dict:
@@ -44,20 +107,13 @@ def load_database_config() -> Dict:
     with open(config_path, 'r', encoding='utf-8') as f:
         config = json.load(f)
     
-    # Reemplazar variables de entorno
-    env_vars = {
-        'DB_HOST': os.getenv('DB_HOST', 'localhost'),
-        'DB_PORT': os.getenv('DB_PORT', '5432'),
-        'DB_NAME': os.getenv('DB_NAME', 'sentiment_analysis'),
-        'DB_USER': os.getenv('DB_USER', 'postgres'),
-        'DB_PASSWORD': os.getenv('DB_PASSWORD', ''),
-    }
+    env_vars = resolve_db_env()
     
     # Actualizar configuración con variables de entorno
-    config['database']['connection']['host'] = env_vars['DB_HOST']
-    config['database']['connection']['port'] = int(env_vars['DB_PORT'])
-    config['database']['connection']['database'] = env_vars['DB_NAME']
-    config['database']['connection']['user'] = env_vars['DB_USER']
-    config['database']['connection']['password'] = env_vars['DB_PASSWORD']
+    config['database']['connection']['host'] = env_vars['host']
+    config['database']['connection']['port'] = int(env_vars['port'])
+    config['database']['connection']['database'] = env_vars['database']
+    config['database']['connection']['user'] = env_vars['user']
+    config['database']['connection']['password'] = env_vars['password']
     
     return config

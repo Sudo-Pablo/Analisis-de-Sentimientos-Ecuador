@@ -593,62 +593,8 @@ def get_db_manager() -> DatabaseManager:
     """
     Crea un DatabaseManager con la configuración por defecto.
     Carga automáticamente la configuración desde config/database/database.json
-    y resuelve las variables de entorno.
-    
-    Returns:
-        DatabaseManager configurado
+    y resuelve las variables de entorno (incluye DATABASE_URL de Render).
     """
-    import os
-    from pathlib import Path
-    from dotenv import load_dotenv
-    
-    # Buscar archivo .env desde el directorio del proyecto
-    project_root = Path(__file__).parent.parent.parent
-    env_path = project_root / ".env"
-    
-    # Cargar variables de entorno
-    if env_path.exists():
-        load_dotenv(env_path)
-    else:
-        # Intentar cargar desde directorio actual
-        load_dotenv()
-        
-        # Verificar si las variables críticas existen
-        if not os.getenv('DB_PASSWORD'):
-            print("\n" + "=" * 60)
-            print("❌ ERROR: Archivo .env no encontrado o incompleto")
-            print("=" * 60)
-            print(f"\nBuscado en: {env_path}")
-            print("\n📋 SOLUCIÓN:")
-            print("   1. Copia el archivo de ejemplo:")
-            print("      copy .env.example .env")
-            print("   2. Edita .env con tus credenciales de PostgreSQL:")
-            print("      DB_HOST=127.0.0.1")
-            print("      DB_PORT=5432")
-            print("      DB_NAME=sentiment_analysis")
-            print("      DB_USER=postgres")
-            print("      DB_PASSWORD=tu_contraseña")
-            print("=" * 60 + "\n")
-    
-    # Buscar archivo de configuración
-    config_path = project_root / "config" / "database" / "database.json"
-    
-    if not config_path.exists():
-        raise FileNotFoundError(
-            f"\n❌ Archivo de configuración no encontrado: {config_path}\n"
-            f"   Asegúrate de estar ejecutando desde la raíz del proyecto.\n"
-            f"   Directorio actual: {Path.cwd()}"
-        )
-    
-    with open(config_path, 'r', encoding='utf-8') as f:
-        config = json.load(f)
-    
-    # Resolver variables de entorno en la configuración
-    conn = config['database']['connection']
-    conn['host'] = os.getenv('DB_HOST', 'localhost')
-    conn['port'] = int(os.getenv('DB_PORT', 5432))
-    conn['database'] = os.getenv('DB_NAME', 'sentiment_analysis')
-    conn['user'] = os.getenv('DB_USER', 'postgres')
-    conn['password'] = os.getenv('DB_PASSWORD', '')
-    
-    return DatabaseManager(config)
+    from api.config import load_database_config
+
+    return DatabaseManager(load_database_config())
