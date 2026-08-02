@@ -3,6 +3,7 @@ Gestor de base de datos
 """
 import logging
 import json
+import os
 from typing import List, Dict, Optional, Tuple
 from datetime import datetime
 from urllib.parse import quote_plus
@@ -47,13 +48,25 @@ class DatabaseManager:
         # Construir URL de conexión sin host (se pasa en connect_args)
         db_url = f"postgresql+psycopg2://{user}:{password}@/{database}"
         
-        # Parámetros de conexión adicionales para Windows
-        # Usar host y port en connect_args para evitar problemas con sockets en Windows
+        # Host/port en connect_args (compatible Windows y Render)
+        host = str(conn_conf.get("host") or "localhost")
         connect_args = {
-            "host": conn_conf['host'],
-            "port": conn_conf['port'],
-            "connect_timeout": 10
+            "host": host,
+            "port": conn_conf["port"],
+            "connect_timeout": 10,
         }
+
+        # Render / Postgres en la nube exige SSL
+        sslmode = os.getenv("DB_SSLMODE", "").strip()
+        if not sslmode:
+            if (
+                os.getenv("ENVIRONMENT", "").lower() == "production"
+                or "render.com" in host
+                or host.startswith("dpg-")
+            ):
+                sslmode = "require"
+        if sslmode:
+            connect_args["sslmode"] = sslmode
         
         # Crear engine
         self.engine = create_engine(

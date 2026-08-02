@@ -29,6 +29,8 @@ services:
         value: INFO
       - key: DATA_DIR
         value: ./data
+      - key: DB_SSLMODE
+        value: require
       - key: DB_HOST
         fromDatabase:
           name: sentiment-db
@@ -72,6 +74,8 @@ services:
         value: production
       - key: LOG_LEVEL
         value: INFO
+      - key: DB_SSLMODE
+        value: require
       - key: DB_HOST
         fromDatabase:
           name: sentiment-db
