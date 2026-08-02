@@ -15,7 +15,18 @@ from pathlib import Path
 # Agregar src al path
 sys.path.append(str(Path(__file__).parent.parent))
 
-from api.routes import sentiments, topics, reports, comments, posts, tiktok_search, facebook_search, unified_search, search_trends
+from api.routes import (
+    sentiments,
+    topics,
+    reports,
+    comments,
+    posts,
+    tiktok_search,
+    facebook_search,
+    unified_search,
+    search_trends,
+    internal,
+)
 from api.sentiment_service import warmup_sentiment_analyzer
 
 logger = logging.getLogger(__name__)
@@ -69,6 +80,7 @@ app.include_router(tiktok_search.router, prefix="/api/tiktok", tags=["TikTok"])
 app.include_router(facebook_search.router, prefix="/api/facebook", tags=["Facebook"])
 app.include_router(unified_search.router, prefix="/api/search", tags=["Unified Search"])
 app.include_router(search_trends.router, prefix="/api/search", tags=["Search Trends"])
+app.include_router(internal.router, prefix="/api/internal", tags=["Internal / Cron"])
 
 @app.get("/")
 async def root():

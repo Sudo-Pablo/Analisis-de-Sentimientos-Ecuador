@@ -77,7 +77,15 @@
   },
   "facebook": {
     "enabled": true,
-    "existing_config": "Se mantiene la configuración actual de Facebook"
+    "note": "La recolección automática usa config/scheduled_collection.json (PPR/Apify). Este bloque documenta las mismas 6 categorías.",
+    "categories": [
+      "Politica",
+      "Economia",
+      "Salud",
+      "Seguridad",
+      "Educacion",
+      "Social"
+    ]
   },
   "sentiment_analysis": {
     "huggingface": {

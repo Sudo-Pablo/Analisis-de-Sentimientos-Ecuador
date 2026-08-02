@@ -1,0 +1,96 @@
+# Blueprint Render: API + Cron de recolección cada 12 horas + Postgres
+# Docs: https://render.com/docs/blueprint-spec
+#
+# Tras el primer deploy:
+# 1) Completa secretos en el dashboard (APIFY_TOKEN, CRON_SECRET, DB_PASSWORD, etc.)
+# 2) Actualiza ALLOWED_ORIGINS con tu URL de Vercel
+# 3) Actualiza startCommand del cron si el nombre del web service cambia la URL
+
+databases:
+  - name: sentiment-db
+    plan: free
+    databaseName: sentiment_analysis
+    user: sentiment
+
+services:
+  - type: web
+    name: sentiment-api
+    runtime: python
+    plan: starter
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn api.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.10.14"
+      - key: ENVIRONMENT
+        value: production
+      - key: LOG_LEVEL
+        value: INFO
+      - key: DATA_DIR
+        value: ./data
+      - key: DB_HOST
+        fromDatabase:
+          name: sentiment-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: sentiment-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: sentiment-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: sentiment-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: sentiment-db
+          property: password
+      - key: APIFY_TOKEN
+        sync: false
+      - key: CRON_SECRET
+        sync: false
+      - key: ALLOWED_ORIGINS
+        sync: false
+
+  # Cron Job: ejecuta el script Python (evita timeouts HTTP de corridas largas)
+  - type: cron
+    name: sentiment-scheduled-collection
+    runtime: python
+    schedule: "0 */12 * * *"
+    buildCommand: pip install -r requirements.txt
+    # Sin flags: usa defaults de config/scheduled_collection.json (todas las categorías, FB+TikTok).
+    # Para afinar volumen: añade --max-posts 8 --max-comments 20, etc.
+    startCommand: python scripts/scrapers/run_scheduled_realtime_collection.py
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.10.14"
+      - key: ENVIRONMENT
+        value: production
+      - key: LOG_LEVEL
+        value: INFO
+      - key: DB_HOST
+        fromDatabase:
+          name: sentiment-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: sentiment-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: sentiment-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: sentiment-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: sentiment-db
+          property: password
+      - key: APIFY_TOKEN
+        sync: false

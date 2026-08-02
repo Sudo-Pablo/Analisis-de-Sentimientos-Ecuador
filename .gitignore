@@ -101,6 +101,8 @@ logs/
 data/
 *.sqlite
 *.db
+*.dump
+sentiment_backup.dump
 # IDE / OS
 .idea/
 .vscode/

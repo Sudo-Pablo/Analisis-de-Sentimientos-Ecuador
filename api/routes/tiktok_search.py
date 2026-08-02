@@ -421,6 +421,28 @@ def build_tiktok_search(request: TikTokSearchRequest) -> BuiltTikTokSearch:
         unregister_search(request.search_id)
 
 
+def persist_tiktok_results(
+    keyword: str,
+    categoria: Optional[str],
+    videos_raw: List[Dict[str, Any]],
+    comments_raw: List[Dict[str, Any]],
+    comment_results: List[CommentResult],
+) -> bool:
+    """Guarda resultados TikTok de forma síncrona (CLI / cron / jobs internos)."""
+    if not videos_raw:
+        return False
+    db_config = load_database_config()
+    db = DatabaseManager(db_config)
+    return _save_results_to_db(
+        db,
+        keyword,
+        categoria,
+        videos_raw,
+        comments_raw,
+        comment_results,
+    )
+
+
 def schedule_tiktok_db_save(
     background_tasks: BackgroundTasks,
     keyword: str,
@@ -448,10 +470,7 @@ def _background_save_tiktok_results(
     comment_results: List[CommentResult],
 ) -> None:
     try:
-        db_config = load_database_config()
-        db = DatabaseManager(db_config)
-        saved = _save_results_to_db(
-            db,
+        saved = persist_tiktok_results(
             keyword,
             categoria,
             videos_raw,

@@ -1,0 +1,55 @@
+{
+  "description": "Keywords para recolección automática (cron cada 12h). Se rota N keywords por categoría y corrida. Los defaults son de producción; en pruebas locales usa flags CLI (--max-posts 1, etc.).",
+  "defaults": {
+    "platforms": ["facebook", "tiktok"],
+    "max_posts": 5,
+    "max_comments": 15,
+    "keywords_per_category": 1,
+    "facebook_method": "ppr",
+    "facebook_dual_search": false
+  },
+  "categories": {
+    "Politica": [
+      "política ecuador",
+      "gobierno ecuador",
+      "presidente ecuador",
+      "asamblea nacional ecuador",
+      "elecciones ecuador"
+    ],
+    "Economia": [
+      "economía ecuador",
+      "dólar ecuador",
+      "inflación ecuador",
+      "empleo ecuador",
+      "canasta básica ecuador"
+    ],
+    "Salud": [
+      "salud ecuador",
+      "hospitales ecuador",
+      "ministerio de salud ecuador",
+      "msp ecuador",
+      "iess ecuador"
+    ],
+    "Seguridad": [
+      "seguridad ecuador",
+      "delincuencia ecuador",
+      "policía ecuador",
+      "inseguridad ecuador",
+      "estado de excepción ecuador"
+    ],
+    "Educacion": [
+      "educación ecuador",
+      "universidades ecuador",
+      "colegios ecuador",
+      "ministerio educación ecuador",
+      "senescyt ecuador"
+    ],
+    "Social": [
+      "sociedad ecuador",
+      "cultura ecuador",
+      "comunidad ecuador",
+      "migración ecuador",
+      "turismo ecuador"
+    ]
+  }
+}
