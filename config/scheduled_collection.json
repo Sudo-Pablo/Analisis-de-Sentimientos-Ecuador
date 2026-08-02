@@ -14,42 +14,87 @@
       "gobierno ecuador",
       "presidente ecuador",
       "asamblea nacional ecuador",
-      "elecciones ecuador"
+      "elecciones ecuador",
+      "partidos políticos ecuador",
+      "alcalde ecuador",
+      "concejal ecuador",
+      "concejala ecuador"
     ],
     "Economia": [
       "economía ecuador",
       "dólar ecuador",
       "inflación ecuador",
       "empleo ecuador",
-      "canasta básica ecuador"
+      "canasta básica ecuador",
+      "gasolina ecuador",
+      "diesel ecuador",
+      "desempleo ecuador",
+      "subida de precios ecuador",
+      "impuestos ecuador",
+      "subsidios ecuador",
+      "precio del pasaje ecuador"
     ],
     "Salud": [
       "salud ecuador",
       "hospitales ecuador",
       "ministerio de salud ecuador",
       "msp ecuador",
-      "iess ecuador"
+      "iess ecuador",
+      "vacunas ecuador",
+      "covid ecuador",
+      "pandemia ecuador",
+      "hospital del seguro ecuador",
+      "falta de medicamentos ecuador",
+      "falta de personal médico ecuador",
+      "medicina ecuador"
     ],
     "Seguridad": [
       "seguridad ecuador",
       "delincuencia ecuador",
       "policía ecuador",
       "inseguridad ecuador",
-      "estado de excepción ecuador"
+      "estado de excepción ecuador",
+      "fuerzas armadas ecuador",
+      "ecu 911 ecuador",
+      "robos ecuador",
+      "homicidios ecuador",
+      "robos de vehículos ecuador",
+      "robos de casas ecuador",
+      "asesinato ecuador",
+      "homicidio ecuador"
     ],
     "Educacion": [
       "educación ecuador",
       "universidades ecuador",
       "colegios ecuador",
       "ministerio educación ecuador",
-      "senescyt ecuador"
+      "senescyt ecuador",
+      "estudiantes ecuador",
+      "exámenes ecuador",
+      "matriculas ecuador",
+      "deserción escolar ecuador",
+      "profesores ecuador",
+      "precio utiles escolares ecuador",
+      "escuelas ecuador",
+      "posgrado ecuador",
+      "educación superior ecuador",
+      "educacion especial ecuador"
     ],
     "Social": [
       "sociedad ecuador",
       "cultura ecuador",
       "comunidad ecuador",
       "migración ecuador",
-      "turismo ecuador"
+      "turismo ecuador",
+      "deportes ecuador",
+      "futbol ecuador",
+      "tours ecuador",
+      "tour cuenca ecuador",
+      "tour guayaquil ecuador",
+      "sitios turisticos ecuador",
+      "novedades ecuador",
+      "conciertos ecuador"
+     
     ]
   }
 }
