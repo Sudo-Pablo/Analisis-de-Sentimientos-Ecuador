@@ -18,8 +18,8 @@ services:
     runtime: python
     plan: starter
     buildCommand: pip install -r requirements.txt
-    # -P evita el ImportError de defusedxml/nltk por imports desde el cwd
-    startCommand: python -P -m uvicorn api.main:app --host 0.0.0.0 --port $PORT
+    # Python 3.10 en Render no soporta -P; el fix de defusedxml va por imports diferidos
+    startCommand: uvicorn api.main:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /
     envVars:
       - key: PYTHON_VERSION
