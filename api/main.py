@@ -104,25 +104,39 @@ async def health_check():
     """
     Verificar estado de la API y base de datos
     """
+    from api.config import load_database_config
     from src.database.db_manager import DatabaseManager
-    
+
+    db_status = "error"
+    topics_count = 0
+    db_error = None
+    db_host = None
+    db_name = None
+
     try:
-        db = DatabaseManager()
-        # Intentar obtener temas para verificar conexión
+        db_config = load_database_config()
+        conn = db_config["database"]["connection"]
+        db_host = str(conn.get("host") or "")
+        db_name = str(conn.get("database") or "")
+        db = DatabaseManager(db_config)
         topics = db.get_active_topics()
         db_status = "connected"
         topics_count = len(topics)
     except Exception as e:
-        logger.error(f"Error en health check: {e}")
-        db_status = "error"
-        topics_count = 0
-    
-    return {
-        "status": "healthy",
+        logger.error(f"Error en health check: {e}", exc_info=True)
+        db_error = str(e)
+
+    payload = {
+        "status": "healthy" if db_status == "connected" else "degraded",
         "database": db_status,
         "topics_available": topics_count,
-        "timestamp": datetime.now().isoformat()
+        "db_host": db_host,
+        "db_name": db_name,
+        "timestamp": datetime.now().isoformat(),
     }
+    if db_error:
+        payload["database_error"] = db_error
+    return payload
 
 if __name__ == "__main__":
     import uvicorn
