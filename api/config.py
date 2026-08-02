@@ -62,10 +62,18 @@ def resolve_db_env() -> Dict[str, str]:
             "password": os.getenv("DB_PASSWORD") or parsed_host["password"],
         }
 
+    # Caso frecuente en Render: pegar "host/dbname" en DB_HOST
+    host_only = host_raw or "localhost"
+    db_from_host = ""
+    if "/" in host_only and "://" not in host_only:
+        host_only, db_from_host = host_only.split("/", 1)
+        host_only = host_only.strip()
+        db_from_host = db_from_host.strip()
+
     return {
-        "host": host_raw or "localhost",
+        "host": host_only or "localhost",
         "port": os.getenv("DB_PORT", "5432"),
-        "database": os.getenv("DB_NAME", "sentiment_analysis"),
+        "database": os.getenv("DB_NAME") or db_from_host or "sentiment_analysis",
         "user": os.getenv("DB_USER", "postgres"),
         "password": os.getenv("DB_PASSWORD", ""),
     }
