@@ -207,12 +207,26 @@ def build_tiktok_search(request: TikTokSearchRequest) -> BuiltTikTokSearch:
         from apify_client import ApifyClient
         client = ApifyClient(apify_token)
         
-        # Buscar videos
+        # Buscar videos (más recientes + aproximación geográfica Ecuador)
+        # videoSearchSorting=LATEST: ordenar búsqueda de videos por más recientes (filtro de pago en Apify)
+        # proxyCountryCode=EC: scrapear como desde Ecuador (filtro de pago / residential proxy)
+        # Nota: si Apify marca temporalmente "Search filters blocked", el actor puede ignorar LATEST;
+        # proxyCountryCode=EC sigue aplicando de forma independiente.
+        proxy_country = os.getenv("TIKTOK_PROXY_COUNTRY", "EC").strip() or "EC"
+        video_sort = os.getenv("TIKTOK_VIDEO_SORT", "LATEST").strip() or "LATEST"
         run_input = {
             "searchQueries": [request.keyword],
             "resultsPerPage": request.max_videos,
-            "searchSection": "/video"
+            "searchSection": "/video",
+            "videoSearchSorting": video_sort,
+            "proxyCountryCode": proxy_country,
         }
+        logger.info(
+            "Input TikTok Apify: queries=%s sort=%s proxyCountry=%s",
+            run_input["searchQueries"],
+            video_sort,
+            proxy_country,
+        )
         
         with timing.stage("apify_videos"):
             logger.info("Ejecutando búsqueda de videos en Apify...")

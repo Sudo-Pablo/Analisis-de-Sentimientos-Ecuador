@@ -197,10 +197,14 @@ class TikTokCollector:
     def _search_videos(self, keyword: str, max_videos: int) -> List[Dict[str, Any]]:
         """Busca videos en TikTok usando Apify"""
         try:
+            proxy_country = os.getenv("TIKTOK_PROXY_COUNTRY", "EC").strip() or "EC"
+            video_sort = os.getenv("TIKTOK_VIDEO_SORT", "LATEST").strip() or "LATEST"
             run_input = {
                 "searchQueries": [keyword],
                 "resultsPerPage": max_videos,
-                "searchSection": "/video"
+                "searchSection": "/video",
+                "videoSearchSorting": video_sort,
+                "proxyCountryCode": proxy_country,
             }
             
             run = self.client.actor("clockworks/tiktok-scraper").call(run_input=run_input)
