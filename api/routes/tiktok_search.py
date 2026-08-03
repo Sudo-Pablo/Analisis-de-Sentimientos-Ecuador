@@ -32,6 +32,53 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
+def enrich_tiktok_keyword_for_ecuador(keyword: str) -> str:
+    """
+    Asegura foco temático en Ecuador añadiendo 'ecuador' a la query de Apify
+    si el usuario no lo incluyó. No usa proxyCountry (suele degradar relevancia).
+    """
+    raw = (keyword or "").strip()
+    if not raw:
+        return raw
+    normalized = (
+        raw.lower()
+        .replace("á", "a")
+        .replace("é", "e")
+        .replace("í", "i")
+        .replace("ó", "o")
+        .replace("ú", "u")
+    )
+    if "ecuador" in normalized:
+        return raw
+    return f"{raw} ecuador"
+
+
+def build_tiktok_search_run_input(keyword: str, max_videos: int) -> Dict[str, Any]:
+    """
+    Input del actor clockworks/tiktok-scraper.
+    Por defecto: búsqueda simple (mejor relevancia).
+    Opcional vía env (pueden empeorar resultados o costar más):
+      TIKTOK_VIDEO_SORT=LATEST|MOST_RELEVANT|MOST_LIKED
+      TIKTOK_PROXY_COUNTRY=EC   # código ISO; no uses 'Ecuador'
+    """
+    query = enrich_tiktok_keyword_for_ecuador(keyword)
+    run_input: Dict[str, Any] = {
+        "searchQueries": [query],
+        "resultsPerPage": max_videos,
+        "searchSection": "/video",
+    }
+    video_sort = os.getenv("TIKTOK_VIDEO_SORT", "").strip()
+    if video_sort:
+        run_input["videoSearchSorting"] = video_sort
+    proxy_country = os.getenv("TIKTOK_PROXY_COUNTRY", "").strip()
+    if proxy_country and proxy_country.lower() not in {"none", "null", "off", "false"}:
+        # Apify espera código ISO (EC), no el nombre "Ecuador"
+        if proxy_country.lower() == "ecuador":
+            proxy_country = "EC"
+        run_input["proxyCountryCode"] = proxy_country
+    return run_input
+
+
 # === SCHEMAS ===
 
 class TikTokSearchRequest(BaseModel):
@@ -207,26 +254,9 @@ def build_tiktok_search(request: TikTokSearchRequest) -> BuiltTikTokSearch:
         from apify_client import ApifyClient
         client = ApifyClient(apify_token)
         
-        # Buscar videos (más recientes + aproximación geográfica Ecuador)
-        # videoSearchSorting=LATEST: ordenar búsqueda de videos por más recientes (filtro de pago en Apify)
-        # proxyCountryCode=EC: scrapear como desde Ecuador (filtro de pago / residential proxy)
-        # Nota: si Apify marca temporalmente "Search filters blocked", el actor puede ignorar LATEST;
-        # proxyCountryCode=EC sigue aplicando de forma independiente.
-        proxy_country = os.getenv("TIKTOK_PROXY_COUNTRY", "EC").strip() or "EC"
-        video_sort = os.getenv("TIKTOK_VIDEO_SORT", "LATEST").strip() or "LATEST"
-        run_input = {
-            "searchQueries": [request.keyword],
-            "resultsPerPage": request.max_videos,
-            "searchSection": "/video",
-            "videoSearchSorting": video_sort,
-            "proxyCountryCode": proxy_country,
-        }
-        logger.info(
-            "Input TikTok Apify: queries=%s sort=%s proxyCountry=%s",
-            run_input["searchQueries"],
-            video_sort,
-            proxy_country,
-        )
+        # Buscar videos (foco Ecuador por keyword; LATEST/proxy solo si hay env explícita)
+        run_input = build_tiktok_search_run_input(request.keyword, request.max_videos)
+        logger.info("Input TikTok Apify: %s", run_input)
         
         with timing.stage("apify_videos"):
             logger.info("Ejecutando búsqueda de videos en Apify...")
