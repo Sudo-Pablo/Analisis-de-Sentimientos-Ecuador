@@ -72,7 +72,7 @@ def parse_args() -> argparse.Namespace:
         "--keywords-per-category",
         type=int,
         default=None,
-        help="Keywords a tomar por categoría en esta corrida (rotación cada 12h)",
+        help="Keywords a tomar por categoría en esta corrida (rotación cada 3h)",
     )
     parser.add_argument(
         "--facebook-method",

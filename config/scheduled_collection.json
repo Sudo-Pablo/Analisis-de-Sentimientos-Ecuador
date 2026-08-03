@@ -1,9 +1,9 @@
 {
-  "description": "Keywords para recolección automática (cron cada 12h). Se rota N keywords por categoría y corrida. Los defaults son de producción; en pruebas locales usa flags CLI (--max-posts 1, etc.).",
+  "description": "Keywords para recolección automática (cron cada 3h). Se rota N keywords por categoría y corrida. Los defaults son de producción; en pruebas locales usa flags CLI (--max-posts 1, etc.).",
   "defaults": {
     "platforms": ["facebook", "tiktok"],
     "max_posts": 5,
-    "max_comments": 15,
+    "max_comments": 5,
     "keywords_per_category": 1,
     "facebook_method": "ppr",
     "facebook_dual_search": false

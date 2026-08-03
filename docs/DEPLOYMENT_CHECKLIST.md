@@ -84,13 +84,13 @@ Variables del **Web Service** (`sentiment-api`):
 - [ ] `POST /api/facebook/search` con `method=ppr`, 1 post / 3 comentarios
 - [ ] Datos visibles en dashboard / tablas remotas
 
-## 5. Cron cada 12 horas
+## 5. Cron cada 3 horas
 
 El Blueprint define el Cron Job `sentiment-scheduled-collection`:
 
 ```text
-schedule: 0 */12 * * *
-command: python scripts/scrapers/run_scheduled_realtime_collection.py --max-posts 2 --max-comments 5
+schedule: 0 */3 * * *
+command: python scripts/scrapers/run_scheduled_realtime_collection.py --max-posts 5 --max-comments 5
 ```
 
 Variables del **Cron** (mismas DB + `APIFY_TOKEN`).

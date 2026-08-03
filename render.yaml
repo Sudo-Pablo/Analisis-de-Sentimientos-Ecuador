@@ -1,10 +1,10 @@
-# Blueprint Render: API + Cron de recolección cada 12 horas + Postgres
+# Blueprint Render: API + Cron de recolección cada 3 horas + Postgres
 # Docs: https://render.com/docs/blueprint-spec
 #
 # Tras el primer deploy:
 # 1) Completa secretos en el dashboard (APIFY_TOKEN, CRON_SECRET, DB_PASSWORD, etc.)
-# 2) Actualiza ALLOWED_ORIGINS con tu URL de Vercel
-# 3) Actualiza startCommand del cron si el nombre del web service cambia la URL
+# 2) Actualiza ALLOWED_ORIGINS con tu URL del frontend (Vercel)
+# 3) Si el Cron se creó a mano, actualiza también Schedule/Command en el dashboard
 
 databases:
   - name: sentiment-db
@@ -67,11 +67,10 @@ services:
   - type: cron
     name: sentiment-scheduled-collection
     runtime: python
-    schedule: "0 */12 * * *"
+    schedule: "0 */3 * * *"
     buildCommand: pip install -r requirements.txt
-    # Sin flags: usa defaults de config/scheduled_collection.json (todas las categorías, FB+TikTok).
-    # Para afinar volumen: añade --max-posts 8 --max-comments 20, etc.
-    startCommand: python scripts/scrapers/run_scheduled_realtime_collection.py
+    # 6 categorías × FB+TikTok; 5 posts/videos por keyword
+    startCommand: python scripts/scrapers/run_scheduled_realtime_collection.py --max-posts 5 --max-comments 5
     envVars:
       - key: PYTHON_VERSION
         value: "3.10.14"

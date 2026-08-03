@@ -43,7 +43,7 @@ def load_scheduled_config() -> Dict[str, Any]:
     """Carga config/scheduled_collection.json con defaults seguros."""
     defaults: Dict[str, Any] = {
         "platforms": ["facebook", "tiktok"],
-        "max_posts": 2,
+        "max_posts": 5,
         "max_comments": 5,
         "keywords_per_category": 1,
         "facebook_method": "ppr",
@@ -68,9 +68,9 @@ def load_scheduled_config() -> Dict[str, Any]:
 
 
 def rotation_index() -> int:
-    """Índice estable por ventana de 12 horas (rota keywords entre corridas)."""
+    """Índice estable por ventana de 3 horas (rota keywords entre corridas)."""
     now = datetime.now()
-    return (now.timetuple().tm_yday * 2) + (0 if now.hour < 12 else 1)
+    return (now.timetuple().tm_yday * 8) + (now.hour // 3)
 
 
 def pick_keywords(keywords: List[str], count: int, seed: int) -> List[str]:

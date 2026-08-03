@@ -1,10 +1,10 @@
-# Guía rápida: Cron 12h + Vercel
+# Guía rápida: Cron 3h + Vercel
 
 API producción: `https://sentiment-api-i0wt.onrender.com`
 
-## 1) Cron Job cada 12 horas (Render)
+## 1) Cron Job cada 3 horas (Render)
 
-1. Dashboard Render → **New** → **Cron Job**
+1. Dashboard Render → **New** → **Cron Job** (o edita el existente)
 2. Conecta el mismo repo `Sudo-Pablo/Analisis-de-Sentimientos-Ecuador`, branch `main`
 3. Configura:
 
@@ -12,9 +12,9 @@ API producción: `https://sentiment-api-i0wt.onrender.com`
 |---|---|
 | **Name** | `sentiment-scheduled-collection` |
 | **Region** | Virginia (US East) — misma que la API/BD |
-| **Schedule** | `0 */12 * * *` (cada 12 horas) |
+| **Schedule** | `0 */3 * * *` (cada 3 horas) |
 | **Build Command** | `pip install -r requirements.txt` |
-| **Command** | `python scripts/scrapers/run_scheduled_realtime_collection.py --max-posts 2 --max-comments 5` |
+| **Command** | `python scripts/scrapers/run_scheduled_realtime_collection.py --max-posts 5 --max-comments 5` |
 
 4. **Environment** (mismas credenciales Internal que `sentiment-api`):
 
